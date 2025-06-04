@@ -29,5 +29,3 @@ export const Contact = sequelize.define("contact", {
     onDelete: "CASCADE",
   },
 });
-
-Contact.belongsTo(User, { foreignKey: "owner" });
