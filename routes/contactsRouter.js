@@ -7,8 +7,11 @@ import {
   updateContact,
   updateStatusContact 
 } from "../controllers/contactsControllers.js";
+import { auth } from "../middlewares/auth.js";
 
 const contactsRouter = express.Router();
+
+contactsRouter.use(auth);
 
 contactsRouter.get("/", getAllContacts);
 
