@@ -2,6 +2,9 @@ import bcrypt from "bcryptjs";
 import { User } from "../models/User.js";
 import HttpError from "../helpers/HttpError.js";
 import jwt from "jsonwebtoken";
+import fs from "fs/promises";
+import path from "path";
+import gravatar from "gravatar";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
@@ -12,14 +15,18 @@ export const registerUser = async ({ email, password }) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
+  const avatarURL = gravatar.url(email, { s: "200", d: "retro" }, true);
+
   const newUser = await User.create({
     email,
     password: hashedPassword,
+    avatarURL
   });
 
   return {
     email: newUser.email,
     subscription: newUser.subscription,
+    avatarURL: newUser.avatarURL,
   };
 };
 
@@ -63,6 +70,21 @@ export const getCurrentUser = async (user) => {
   }
   return {
     email: user.email,
+    avatarURL: user.avatarURL,
     subscription: user.subscription,
   };
+};
+
+export const updateUserAvatar = async (user, file) => {
+  const { path: tempPath, filename } = file;
+  const avatarsDir = path.resolve("public/avatars");
+  const finalPath = path.join(avatarsDir, filename);
+  const avatarURL = `/avatars/${filename}`;
+
+  await fs.rename(tempPath, finalPath);
+
+  user.avatarURL = avatarURL;
+  await user.save();
+
+  return avatarURL;
 };

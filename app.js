@@ -1,6 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import path from 'path';
 
 import { sequelize } from "./db/db.js";
 
@@ -8,6 +9,8 @@ import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRouter.js";
 
 const app = express();
+
+app.use('/avatars', express.static(path.resolve('public/avatars')));
 
 app.use(morgan("tiny"));
 app.use(cors());

@@ -45,3 +45,17 @@ export const getCurrent = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateAvatar = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      throw HttpError(400, "File is required");
+    }
+
+    const avatarURL = await authServices.updateUserAvatar(req.user, req.file);
+
+    res.status(200).json({ avatarURL });
+  } catch (error) {
+    next(error);
+  }
+};
