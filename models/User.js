@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db/db.js";
-import { Contact } from "./Contact.js";
 
 export const User = sequelize.define("user", {
   password: {
@@ -19,5 +18,9 @@ export const User = sequelize.define("user", {
   token: {
     type: DataTypes.STRING,
     defaultValue: null,
+  },
+  avatarURL: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 });
